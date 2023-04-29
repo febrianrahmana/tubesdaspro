@@ -181,7 +181,7 @@ def ayamberkokok() -> None:
     print("Kukuruyuk.. Kukuruyuk..")
     print(f"\nJumlah Candi: {candi.neff}\n")
     if candi.neff < 100:
-        print("\nSelamat, Roro Jonggrang memenangkan permainan!\n")
+        print("Selamat, Roro Jonggrang memenangkan permainan!\n")
         print("*Bandung Bondowoso angry noise*")
         print("Roro Jonggrang dikutuk menjadi candi.")
         sys.exit()
@@ -275,14 +275,8 @@ if __name__ == "__main__":
                 help(ALLOWED_COMMANDS)
             elif cmd == "logout":
                 logout()
-            elif cmd == "summonjin":
-                summonjin()
-            elif cmd == "hapusjin":
-                hapusjin()
-            elif cmd == "save":
-                save()
             elif cmd == "debug":
-                print(users.arr)
+                print_user(users)
     else:
         print("Tidak ada nama folder yang diberikan!")
         print()

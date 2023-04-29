@@ -16,7 +16,7 @@ def not_in(arr: Array, item: VALID_TYPE) -> bool:
 def binary_question(text: str) -> str:
     # Mengulang pertanyaan sampai jawaban antara Y atau N kemudian mengembalikan jawaban tersebut
     choice = ""
-    while choice != "Y" or choice != "N":
+    while choice != "Y" and choice != "N":
         choice = input(text).upper()
     return choice
 
@@ -136,3 +136,8 @@ def csv_parser(folder_path : str, file: FILENAME, arr: Array) -> None:
             
             r = f.readline()
     return arr
+
+# buat ngetes doang
+def print_user(arr):
+    for i in range(arr.neff):
+        print(arr.arr[i].nama, arr.arr[i].pwd, arr.arr[i].role)
