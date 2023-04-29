@@ -1,8 +1,6 @@
 import typing
 
-FILENAME = typing.Literal["bahan_bangunan.csv", "candi.csv", "user.csv"]
 ROLE_TYPE = typing.Literal["roro_jonggrang", "bandung_bondowoso", "jin_pembangun", "jin_pengumpul"]
-NMAX = 102
 
 class User:
     def __init__(self, arr: list[str, str, ROLE_TYPE]) -> None:
@@ -17,8 +15,79 @@ class Candi:
         self.pasir = arr[2]
         self.batu = arr[3]
         self.air = arr[4]
+
+class Bahan:
+    def __init__(self, arr: list[str,str,int]):
+        self.jenis = arr[0]
+        self.deskripsi = arr[1]
+        self.jumlah = arr[2]
+        
+class Command:
+    def __init__(self, arr: list[str]) -> None:
+        self.nama = arr[0]
+        self.deskripsi = arr[1]
         
 class Array:
-    def __init__(self, arr : list[list[typing.Union[User, Candi]], int]) -> None:
+    def __init__(self, arr : list[list[typing.Union[User, Candi, Bahan, Command]], int]) -> None:
         self.arr = arr[0]
         self.neff = arr[1]
+
+VALID_TYPE = typing.Union[int, str, User, Candi, list]
+FILENAME = typing.Literal["bahan_bangunan.csv", "candi.csv", "user.csv"]
+NMAX = 102
+
+BANDUNG_COMMANDS = Array([
+    [
+        Command(["summonjin", "Memanggil jin dari dunia lain"]),
+        Command(["hapusjin", "Menghilangkan jin"]),
+        Command(["ubahjin", "Mengubah tipe jin"]),
+        Command(["batchkumpul","Mengerahkan seluruh jin pengumpul untuk mengumpulkan bahan bangunan"]),
+        Command(["batchbangun","Mengerahkan seluruh jin pembangun untuk membangun candi"]),
+        Command(["laporanjin", "Mengambil laporan jin untuk mengetahui kinerja dari para jin"]),
+        Command(["laporancandi","Mengambil laporan candi untuk mengetahui progress pembangunan candi"]),
+        Command(["undo", "Mengembalikan jin yang telah dipecat"]),
+        Command(["logout", "Untuk keluar dari akun"]),
+        Command(["save", "Untuk menyimpan data program ke suatu folder"]),
+        Command(["exit", "Untuk keluar dari program dan kembali ke terminal"])
+    ],
+    11
+])
+
+RORO_COMMANDS = Array([
+    [
+        Command(["hancurkancandi", "Menghancurkan candi agar menggagalkan rencana Bandung Bondowoso"]),
+        Command(["ayamberkokok", "Menyelesaikan permainan dengan memalsukan pagi hari"]),
+        Command(["logout", "Untuk keluar dari akun"]),
+        Command(["save", "Untuk menyimpan data program ke suatu folder"]),
+        Command(["exit", "Untuk keluar dari program dan kembali ke terminal"])
+    ],
+    5
+])
+
+PEMBANGUN_COMMANDS = Array([
+    [
+        Command(["bangun", "Membangun candi dari bahan bangunan yang ada"]),
+        Command(["logout", "Untuk keluar dari akun"]),
+        Command(["save", "Untuk menyimpan data program ke suatu folder"]),
+        Command(["exit", "Untuk keluar dari program dan kembali ke terminal"])
+    ],
+    4
+])
+PENGUMPUL_COMMANDS = Array([
+    [
+        Command(["kumpul", "Mengumpulkan bahan-bahan yang diperlukan untuk membuat candi"]),
+        Command(["logout", "Untuk keluar dari akun"]),
+        Command(["save", "Untuk menyimpan data program ke suatu folder"]),
+        Command(["exit", "Untuk keluar dari program dan kembali ke terminal"])
+    ],
+    4
+])
+
+DEFAULT_COMMANDS = Array([
+    [
+        Command(["login", "Untuk masuk menggunakan akun"]),
+        Command(["save", "Untuk menyimpan data program ke suatu folder"]),
+        Command(["exit", "Untuk keluar dari program dan kembali ke terminal"])
+    ],
+    3
+])

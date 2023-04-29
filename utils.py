@@ -1,60 +1,106 @@
 import typing, os
+from collections.abc import Callable
 from models import *
 from main import FILENAME
-# TODO : length, insert_empty, pop (remove at index),
+import random
 
+# TODO: append/konso, head, tail
+
+# Belum dipake
+def not_in(arr: Array, item: VALID_TYPE) -> bool:
+    # Mengembalikan True jika menemukan item dalam array
+    for i in range(arr.neff):
+        if arr.arr[i] == item:
+            return True
+    return False
+
+def binary_question(text: str) -> str:
+    # Mengulang pertanyaan sampai jawaban antara Y atau N kemudian mengembalikan jawaban tersebut
+    choice = ""
+    while choice != "Y" or choice != "N":
+        choice = input(text).upper()
+    return choice
+
+def search_nama(user_array: Array, nama: str) -> int:
+    # Mencari nama dalam matriks user dan mengembalikan indexnya jika ditemukan
+    for i in range(user_array.neff):
+        if user_array.arr[i].nama == nama:
+            return i
+    return -1
+
+def search_id(candi_array: Array, id: int) -> int:
+    # Mencari nama dalam matriks user dan mengembalikan indexnya jika ditemukan
+    for i in range(candi_array.neff):
+        if candi_array.arr[i].nama == id:
+            return i
+    return -1
+
+# Belum dipake
 def length(arr: list) -> int:
-    idx = 0
-    while arr[idx] != None:
-        idx += 1
-    return idx
+    # Mengembalikan jumlah index di list yang terisi
+    total = NMAX
+    for i in range(NMAX):
+        if arr[i] == None:
+            total -= 1
+    return total
 
-def merge_sort(arr):
-    if length(arr) <= 1:
+def insert_empty(arr: Array, item: typing.Union[list, User, Candi], i = 0) -> Array:
+    # Memasukkan item ke index array paling kecil yang kosong 
+    if arr.arr[i] != None:
+        insert_empty(arr, item, i + 1)
+    else:
+        arr.arr[i] = item
+        arr.neff += 1
         return arr
     
-    # Divide the array into two sub-arrays
-    mid = length(arr) // 2
-    left_arr = arr[:mid]
-    right_arr = arr[mid:]
-    
-    # Recursively sort the two sub-arrays
-    left_arr = merge_sort(left_arr)
-    right_arr = merge_sort(right_arr)
-    
-    # Merge the two sorted sub-arrays
-    sorted_arr = []
-    i = j = 0
-    while i < length(left_arr) and j < length(right_arr):
-        if left_arr[i] <= right_arr[j]:
-            sorted_arr.append(left_arr[i])
-            i += 1
-        else:
-            sorted_arr.append(right_arr[j])
-            j += 1
-    sorted_arr += left_arr[i:]
-    sorted_arr += right_arr[j:]
-    
-    return sorted_arr
+def find_empty(arr: Array, i = 0) -> int:
+    # Mengembalikan index di array yang kosong
+    if i >= NMAX:
+        return -1
+    elif arr.arr[i] != None:
+        find_empty(arr, i + 1)
+    else:
+        return i
 
-def rmv(arr: list, index: int, i: int = 0) -> list:
+# TODO reimplement sort (probably use konso, head, tail concept to make it recursive)
+def bigger(a: typing.Union[int, str], b: typing.Union[int, str]) -> typing.Union[int,str]:
+    # Return bigger value for comparator
+    return a if a > b else b
+
+def bubble_sort(arr: list, comparator: Callable):
+    pass
+
+def rmv(arr: Array, index: int, i: int = 0) -> Array:
+    # Mengosongkan suatu index pada list
     if index == i:
-        arr[i] = None
+        arr.arr[i] = None
+        arr.neff -= 1
         return arr
     else:
         return rmv(arr, index, i + 1)
 
-def pop(arr, i):
-    if arr[i] != None:
-        arr[i] = arr[i+1]
+def pop(arr: Array, i: int) -> Array:
+    # Menghapus suatu index pada array dan menggeser index
+    if arr.arr[i] != None:
+        arr.arr[i] = arr.arr[i+1]
         return pop(arr,i+1)
     else:
+        arr.neff -= 1
         return arr
     
+# TODO implement lcg randomization
+def randomize(a,b):
+    # Mengembalikan jumlah random dari range a sampai b
+    return random.randint(a,b)
+
+def csv_writer(folder_path : str, users : Array, candi : Array, bahan_bangunan: Array) -> None:
+    pass
+
 def csv_parser(folder_path : str, file: FILENAME, arr: Array) -> None:
+    # Membaca file csv kemudian mengembalikan sebagai array
     arr.neff = 0
     # Pembacaan file
-    with open(os.path.join(folder_path,file)) as f:
+    with open(os.path.join(folder_path,file), 'r') as f:
         # Menghitung jumlah kolom
         column_count = 1
         column = f.readline()
@@ -81,7 +127,7 @@ def csv_parser(folder_path : str, file: FILENAME, arr: Array) -> None:
                     text = ""
             
             if file == "bahan_bangunan.csv":
-                arr.arr[arr.neff] = item
+                arr.arr[arr.neff] = Bahan(item)
             elif file == "candi.csv":
                 arr.arr[arr.neff] = Candi(item)
             else:
@@ -89,3 +135,4 @@ def csv_parser(folder_path : str, file: FILENAME, arr: Array) -> None:
             arr.neff += 1
             
             r = f.readline()
+    return arr
