@@ -1,0 +1,8 @@
+- F03 tadi dari 'or' diganti 'and'
+- nambahin newline di beberapa tempat biar kayak contoh
+- added sys.exit ketika ngeload folder yang gaada
+- removed bug in models.py (kayak di init class bahan dari arr: list[str,str,int] jadi list) (gua gatau ini bug atau ngga tapi keknya febrian beginiin bug yang mirip)
+- removed from main import FILENAME in utils (ada importerror)
+
+
+- Bug ketika 2x manggil summonjin, udah di fix dengan ngedelete users = insert_empty(blabla) jadi insert_empty(blala)

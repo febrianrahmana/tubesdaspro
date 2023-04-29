@@ -1,7 +1,6 @@
 import typing, os
 from collections.abc import Callable
 from models import *
-from main import FILENAME
 import random
 
 # TODO: append/konso, head, tail
@@ -52,6 +51,7 @@ def insert_empty(arr: Array, item: typing.Union[list, User, Candi], i = 0) -> Ar
         arr.arr[i] = item
         arr.neff += 1
         return arr
+
     
 def find_empty(arr: Array, i = 0) -> int:
     # Mengembalikan index di array yang kosong

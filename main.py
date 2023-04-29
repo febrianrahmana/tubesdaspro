@@ -54,10 +54,10 @@ def summonjin() -> None:
             (2) Pembangun - Bertugas membangun candi
         """)
         jenis_jin = ""
-        while jenis_jin != "1" or jenis_jin != "2":
+        while jenis_jin != "1" and jenis_jin != "2":
             print()
             jenis_jin = input("Masukkan nomor jenis jin ingin dipanggil: ")
-            if jenis_jin != "1" or jenis_jin != "2":
+            if jenis_jin != "1" and jenis_jin != "2":
                 print()
                 print(f'Tidak ada jenis jin bernomor "{jenis_jin}"!')
         if jenis_jin == "1":
@@ -82,12 +82,12 @@ def summonjin() -> None:
             else:
                 valid = True
         
-        print("Mengumpulkan sesajen...")
+        print("\nMengumpulkan sesajen...")
         print("Menyerahkan sesajen...")
         print("Membacakan mantra...")
         
         jin_baru = User([username, password, jenis_jin])
-        users = insert_empty(users, jin_baru)
+        insert_empty(users, jin_baru)
         
         print()
         print(f"Jin {username} berhasil dipanggil!")
@@ -204,7 +204,7 @@ def load(path : str) -> None:
         
     else:
         print(f'Folder "{path}" tidak ditemukan.')
-        print()
+        sys.exit()
 
 # F14 - Save
 # Input: logged in user
@@ -270,11 +270,17 @@ if __name__ == "__main__":
         while True:
             cmd = input(">>> ")
             if cmd == "login":
-                LOGGED_IN = login(LOGGED_IN, users)
+                login(users)
             elif cmd == "help":
                 help(ALLOWED_COMMANDS)
             elif cmd == "logout":
                 logout()
+            elif cmd == "summonjin":
+                summonjin()
+            elif cmd == "hapusjin":
+                hapusjin()
+            elif cmd == "save":
+                save()
             elif cmd == "debug":
                 print(users.arr)
     else:
