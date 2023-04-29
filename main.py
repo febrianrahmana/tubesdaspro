@@ -143,25 +143,25 @@ def bangun() -> None:
 
 # F08 - Batch Bangun/Kumpul
 # Input: logged in user
-def batchbangun():
+def batchbangun() -> None:
     pass
 
-def batchkumpul():
+def batchkumpul() -> None:
     pass
 
 # F09 - Laporan Jin
 # Input: matriks jin, matriks candi, matriks bahan bangunan
-def bangun():
+def bangun() -> None:
     pass
 
 # F10 - Laporan Candi
 # Input: matriks candi
-def laporancandi():
+def laporancandi() -> None:
     pass
 
 # F11 - Hancurkan Candi
 # Input: matriks candi
-def hancurkancandi():
+def hancurkancandi() -> None:
     global candi
     id_candi = int(input("Masukkan ID candi: "))
     found_index = search_id(candi, id_candi)
@@ -176,7 +176,7 @@ def hancurkancandi():
 
 # F12 - Ayam Berkokok
 # Input: matriks candi
-def ayamberkokok():
+def ayamberkokok() -> None:
     global candi
     print("Kukuruyuk.. Kukuruyuk..")
     print(f"\nJumlah Candi: {candi.neff}\n")
@@ -208,7 +208,7 @@ def load(path : str) -> None:
 
 # F14 - Save
 # Input: logged in user
-def save():
+def save() -> None:
     global users, candi, bahan_bangunan
     print()
     folder = input("Masukkan nama folder: ")
@@ -222,16 +222,15 @@ def save():
 
 # F15 - Help
 # Input: logged in user
-def help():
-    global ALLOWED_COMMANDS
+def help(commands : Array[Command, int]) -> None:
     print("=========== HELP ===========")
-    for i in range(ALLOWED_COMMANDS.neff):
-        print(f"{i+1}. {ALLOWED_COMMANDS.arr[i].nama}")
-        print(f"   {ALLOWED_COMMANDS.arr[i].deskripsi}")
+    for i in range(commands.neff):
+        print(f"{i+1}. {commands.arr[i].nama}")
+        print(f"   {commands.arr[i].deskripsi}")
 
 # F16 - Exit
 # Input: logged in user
-def exit():
+def exit() -> None:
     choice = binary_question("Apakah Anda mau melakukan penyimpanan file yang sudah diubah (Y/N)? ")
     if choice == "Y":
         save()
@@ -239,7 +238,7 @@ def exit():
     
 # B04 - Undo
 # Input: jin purg, candi purg
-def undo():
+def undo() -> None:
     global jin_purgatory, candi_purgatory
     pass
 # -----------------------=====================================----------------------------------
@@ -272,6 +271,8 @@ if __name__ == "__main__":
             cmd = input(">>> ")
             if cmd == "login":
                 LOGGED_IN = login(LOGGED_IN, users)
+            elif cmd == "help":
+                help(ALLOWED_COMMANDS)
             elif cmd == "logout":
                 logout()
             elif cmd == "debug":
