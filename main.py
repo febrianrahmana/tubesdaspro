@@ -151,7 +151,7 @@ def batchkumpul() -> None:
 
 # F09 - Laporan Jin
 # Input: matriks jin, matriks candi, matriks bahan bangunan
-def bangun() -> None:
+def laporanjin() -> None:
     pass
 
 # F10 - Laporan Candi
@@ -222,7 +222,7 @@ def save() -> None:
 
 # F15 - Help
 # Input: logged in user
-def help(commands : Array[Command, int]) -> None:
+def help(commands : Array) -> None:
     print("=========== HELP ===========")
     for i in range(commands.neff):
         print(f"{i+1}. {commands.arr[i].nama}")
