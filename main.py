@@ -270,7 +270,7 @@ if __name__ == "__main__":
         while True:
             cmd = input(">>> ")
             if cmd == "login":
-                LOGGED_IN = login(LOGGED_IN, users)
+                login(users)
             elif cmd == "help":
                 help(ALLOWED_COMMANDS)
             elif cmd == "logout":
