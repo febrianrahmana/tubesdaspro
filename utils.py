@@ -1,8 +1,12 @@
-import typing, os
+import typing, os, datetime
 from collections.abc import Callable
 from models import *
 from main import FILENAME
-import random
+
+# Membuat seed awal berdasarkan epoch time
+now = datetime.datetime.today()
+seconds = now.timestamp()
+seed = round(seconds)
 
 # TODO: append/konso, head, tail
 
@@ -88,10 +92,16 @@ def pop(arr: Array, i: int) -> Array:
         arr.neff -= 1
         return arr
     
-# TODO implement lcg randomization
-def randomize(a: int,b : int) -> int:
-    # Mengembalikan jumlah random dari range a sampai b
-    return random.randint(a,b)
+def randomize(a: int, b : int) -> int:
+    # Mengembalikan jumlah random dari range a sampai b menggunakan lcg
+    global seed
+    multiplier = 123813757
+    increment = 102391847223
+    modulus = 2**32
+    
+    res = seed = (multiplier*seed+increment) % modulus
+    
+    return res % (b + (1-a)) + a
 
 def csv_writer(folder_path : str, users : Array, candi : Array, bahan_bangunan: Array) -> None:
     pass
