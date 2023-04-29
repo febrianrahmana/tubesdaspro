@@ -89,7 +89,7 @@ def pop(arr: Array, i: int) -> Array:
         return arr
     
 # TODO implement lcg randomization
-def randomize(a,b):
+def randomize(a: int,b : int) -> int:
     # Mengembalikan jumlah random dari range a sampai b
     return random.randint(a,b)
 
