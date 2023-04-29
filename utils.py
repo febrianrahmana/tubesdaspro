@@ -2,9 +2,11 @@ import typing, os
 from collections.abc import Callable
 from models import *
 from main import FILENAME
+import random
 
 # TODO: append/konso, head, tail
 
+# Belum dipake
 def not_in(arr: Array, item: VALID_TYPE) -> bool:
     # Mengembalikan True jika menemukan item dalam array
     for i in range(arr.neff):
@@ -12,20 +14,28 @@ def not_in(arr: Array, item: VALID_TYPE) -> bool:
             return True
     return False
 
-def question(text: str, choices: Array) -> str:
-    # Mengulang pertanyaan sampai jawaban sesuai dengan pilihan yang ada kemudian mengembalikan jawaban tersebut
+def binary_question(text: str) -> str:
+    # Mengulang pertanyaan sampai jawaban antara Y atau N kemudian mengembalikan jawaban tersebut
     choice = ""
-    while not_in(choices.arr, choice):
-        choice = input(text)
+    while choice != "Y" or choice != "N":
+        choice = input(text).upper()
     return choice
 
-def search_nama(user_array: Array, nama: str) -> bool:
+def search_nama(user_array: Array, nama: str) -> int:
     # Mencari nama dalam matriks user dan mengembalikan indexnya jika ditemukan
     for i in range(user_array.neff):
         if user_array.arr[i].nama == nama:
             return i
     return -1
 
+def search_id(candi_array: Array, id: int) -> int:
+    # Mencari nama dalam matriks user dan mengembalikan indexnya jika ditemukan
+    for i in range(candi_array.neff):
+        if candi_array.arr[i].nama == id:
+            return i
+    return -1
+
+# Belum dipake
 def length(arr: list) -> int:
     # Mengembalikan jumlah index di list yang terisi
     total = NMAX
@@ -42,6 +52,15 @@ def insert_empty(arr: Array, item: typing.Union[list, User, Candi], i = 0) -> Ar
         arr.arr[i] = item
         arr.neff += 1
         return arr
+    
+def find_empty(arr: Array, i = 0) -> int:
+    # Mengembalikan index di array yang kosong
+    if i >= NMAX:
+        return -1
+    elif arr.arr[i] != None:
+        find_empty(arr, i + 1)
+    else:
+        return i
 
 # TODO reimplement sort (probably use konso, head, tail concept to make it recursive)
 def bigger(a: typing.Union[int, str], b: typing.Union[int, str]) -> typing.Union[int,str]:
@@ -69,11 +88,19 @@ def pop(arr: Array, i: int) -> Array:
         arr.neff -= 1
         return arr
     
+# TODO implement lcg randomization
+def randomize(a,b):
+    # Mengembalikan jumlah random dari range a sampai b
+    return random.randint(a,b)
+
+def csv_writer(folder_path : str, users : Array, candi : Array, bahan_bangunan: Array) -> None:
+    pass
+
 def csv_parser(folder_path : str, file: FILENAME, arr: Array) -> None:
     # Membaca file csv kemudian mengembalikan sebagai array
     arr.neff = 0
     # Pembacaan file
-    with open(os.path.join(folder_path,file)) as f:
+    with open(os.path.join(folder_path,file), 'r') as f:
         # Menghitung jumlah kolom
         column_count = 1
         column = f.readline()
@@ -100,7 +127,7 @@ def csv_parser(folder_path : str, file: FILENAME, arr: Array) -> None:
                     text = ""
             
             if file == "bahan_bangunan.csv":
-                arr.arr[arr.neff] = item
+                arr.arr[arr.neff] = Bahan(item)
             elif file == "candi.csv":
                 arr.arr[arr.neff] = Candi(item)
             else:
@@ -108,3 +135,4 @@ def csv_parser(folder_path : str, file: FILENAME, arr: Array) -> None:
             arr.neff += 1
             
             r = f.readline()
+    return arr
