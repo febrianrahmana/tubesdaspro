@@ -39,7 +39,7 @@ def login(users: Array) -> None:
 def logout() -> None:
     global LOGGED_IN
     if LOGGED_IN.nama != None:
-        LOGGED_IN = User([None for i in range(3)])
+        LOGGED_IN = User((None, None, None))
     else:
         print("Logout gagal!")
         print("Anda belum login, silakan login terlebih dahulu sebelum melakukan logout")
@@ -86,7 +86,7 @@ def summonjin() -> None:
         print("Menyerahkan sesajen...")
         print("Membacakan mantra...")
         
-        jin_baru = User([username, password, jenis_jin])
+        jin_baru = User((username, password, jenis_jin))
         insert_empty(users, jin_baru)
         
         print()
@@ -156,8 +156,53 @@ def laporanjin() -> None:
 
 # F10 - Laporan Candi
 # Input: matriks candi
-def laporancandi() -> None:
-    pass
+def laporancandi(candi: Array, logged_in: User) -> None:
+    if logged_in.role != "bandung_bondowoso":
+        print("Laporan candi hanya dapat diakses oleh akun Bandung Bondowoso.")
+    
+    def harga_candi(candi: Candi):
+        return 10_000 * candi.pasir + 15_000 * candi.batu + 7_500 * candi.air
+    
+    def formatting(angka):
+        terpisah_koma = "{:,}".format(angka)
+        terpisah_titik = ""
+        for i in range(len(terpisah_koma)):
+            if terpisah_koma[i] == ",":
+                terpisah_titik += "."
+            else:
+                terpisah_titik += terpisah_koma[i]
+        return terpisah_titik
+    
+    candi_termahal = Candi((None,None,0,0,0))
+    candi_termurah = Candi((None,None,0,0,0))
+    
+    if candi.neff > 0:
+        jumlah_pasir = 0
+        jumlah_batu = 0
+        jumlah_air = 0
+        
+        for i in range(candi.neff):
+            jumlah_pasir += candi.arr[i].pasir
+            jumlah_batu += candi.arr[i].batu
+            jumlah_air += candi.arr[i].air
+            if harga_candi(candi.arr[i]) > harga_candi(candi_termahal):
+                candi_termahal = candi.arr[i]
+            elif harga_candi(candi.arr[i]) < harga_candi(candi_termurah):
+                candi_termurah = candi.arr[i]
+                
+        print(f"> Total Candi: {candi.neff}")
+        print(f"> Total Pasir yang digunakan: {jumlah_pasir}")
+        print(f"> Total Batu yang digunakan: {jumlah_batu}")
+        print(f"> Total Air yang digunakan: {jumlah_air}")
+        print(f"> ID Candi Termahal: {candi_termahal.id} (Rp {formatting(harga_candi(candi_termahal))})")
+        print(f"> ID Candi Termurah: {candi_termurah.id} (Rp {formatting(harga_candi(candi_termahal))})")
+    else:
+        print("> Total Candi: 0")
+        print("> Total Pasir yang digunakan: 0")
+        print("> Total Batu yang digunakan: 0")
+        print("> Total Air yang digunakan: 0")
+        print("> ID Candi Termahal: -")
+        print("> ID Candi Termurah: -")
 
 # F11 - Hancurkan Candi
 # Input: matriks candi
@@ -226,7 +271,7 @@ def help(commands : Array) -> None:
     print("=========== HELP ===========")
     for i in range(commands.neff):
         print(f"{i+1}. {commands.arr[i].nama}")
-        print(f"   {commands.arr[i].deskripsi}")
+        print(f"    {commands.arr[i].deskripsi}")
 
 # F16 - Exit
 # Input: logged in user
@@ -244,7 +289,7 @@ def undo() -> None:
 # -----------------------=====================================----------------------------------
 
 # Variabel berisi akun yang sedang login dan commandsnya
-LOGGED_IN = User([None for i in range(3)]) # Simpan user yang login
+LOGGED_IN = User((None, None, None)) # Simpan user yang login
 ALLOWED_COMMANDS = DEFAULT_COMMANDS
 
 # Parser untuk input nama folder
@@ -253,13 +298,13 @@ parser.add_argument("nama_folder", help="Folder berisi data csv", nargs='?', def
 args = parser.parse_args()
 
 # Array data user, candi, dan bahan bangunan
-users = Array([[None for i in range(NMAX)], 0])
-candi = Array([[None for i in range(NMAX)], 0])
-bahan_bangunan = Array([[None for i in range(NMAX)], 0])
+users = Array(([None for i in range(NMAX)], 0))
+candi = Array(([None for i in range(NMAX)], 0))
+bahan_bangunan = Array(([None for i in range(NMAX)], 0))
 
 # Array jin dan candi yang telah dihapus
-jin_purgatory = Array([[None for i in range(NMAX)], 0])
-candi_purgatory = Array([[None for i in range(NMAX)], 0])
+jin_purgatory = Array(([None for i in range(NMAX)], 0))
+candi_purgatory = Array(([None for i in range(NMAX)], 0))
 
 # Run ketika file di call
 if __name__ == "__main__":
@@ -273,6 +318,8 @@ if __name__ == "__main__":
                 login(users)
             elif cmd == "help":
                 help(ALLOWED_COMMANDS)
+            elif cmd == "laporancandi":
+                laporancandi(candi)
             elif cmd == "logout":
                 logout()
             elif cmd == "debug":
