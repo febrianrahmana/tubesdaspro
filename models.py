@@ -53,7 +53,7 @@ BANDUNG_COMMANDS = Array((
     11
 ))
 
-RORO_COMMANDS = Array([
+RORO_COMMANDS = Array((
     [
         Command(("hancurkancandi", "Menghancurkan candi agar menggagalkan rencana Bandung Bondowoso")),
         Command(("ayamberkokok", "Menyelesaikan permainan dengan memalsukan pagi hari")),
@@ -62,9 +62,9 @@ RORO_COMMANDS = Array([
         Command(("exit", "Untuk keluar dari program dan kembali ke terminal"))
     ],
     5
-])
+))
 
-PEMBANGUN_COMMANDS = Array([
+PEMBANGUN_COMMANDS = Array((
     [
         Command(("bangun", "Membangun candi dari bahan bangunan yang ada")),
         Command(("logout", "Untuk keluar dari akun")),
@@ -72,8 +72,8 @@ PEMBANGUN_COMMANDS = Array([
         Command(("exit", "Untuk keluar dari program dan kembali ke terminal"))
     ],
     4
-])
-PENGUMPUL_COMMANDS = Array([
+))
+PENGUMPUL_COMMANDS = Array((
     [
         Command(("kumpul", "Mengumpulkan bahan-bahan yang diperlukan untuk membuat candi")),
         Command(("logout", "Untuk keluar dari akun")),
@@ -81,13 +81,13 @@ PENGUMPUL_COMMANDS = Array([
         Command(("exit", "Untuk keluar dari program dan kembali ke terminal"))
     ],
     4
-])
+))
 
-DEFAULT_COMMANDS = Array([
+DEFAULT_COMMANDS = Array((
     [
         Command(("login", "Untuk masuk menggunakan akun")),
         Command(("save", "Untuk menyimpan data program ke suatu folder")),
         Command(("exit", "Untuk keluar dari program dan kembali ke terminal"))
     ],
     3
-])
+))
