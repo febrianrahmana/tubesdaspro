@@ -54,10 +54,10 @@ def summonjin() -> None:
             (2) Pembangun - Bertugas membangun candi
         """)
         jenis_jin = ""
-        while jenis_jin != "1" or jenis_jin != "2":
+        while jenis_jin != "1" and jenis_jin != "2":
             print()
             jenis_jin = input("Masukkan nomor jenis jin ingin dipanggil: ")
-            if jenis_jin != "1" or jenis_jin != "2":
+            if jenis_jin != "1" and jenis_jin != "2":
                 print()
                 print(f'Tidak ada jenis jin bernomor "{jenis_jin}"!')
         if jenis_jin == "1":
@@ -82,12 +82,12 @@ def summonjin() -> None:
             else:
                 valid = True
         
-        print("Mengumpulkan sesajen...")
+        print("\nMengumpulkan sesajen...")
         print("Menyerahkan sesajen...")
         print("Membacakan mantra...")
         
         jin_baru = User([username, password, jenis_jin])
-        users = insert_empty(users, jin_baru)
+        insert_empty(users, jin_baru)
         
         print()
         print(f"Jin {username} berhasil dipanggil!")
@@ -181,7 +181,7 @@ def ayamberkokok() -> None:
     print("Kukuruyuk.. Kukuruyuk..")
     print(f"\nJumlah Candi: {candi.neff}\n")
     if candi.neff < 100:
-        print("\nSelamat, Roro Jonggrang memenangkan permainan!\n")
+        print("Selamat, Roro Jonggrang memenangkan permainan!\n")
         print("*Bandung Bondowoso angry noise*")
         print("Roro Jonggrang dikutuk menjadi candi.")
         sys.exit()
@@ -204,7 +204,7 @@ def load(path : str) -> None:
         
     else:
         print(f'Folder "{path}" tidak ditemukan.')
-        print()
+        sys.exit()
 
 # F14 - Save
 # Input: logged in user
@@ -276,7 +276,7 @@ if __name__ == "__main__":
             elif cmd == "logout":
                 logout()
             elif cmd == "debug":
-                print(users.arr)
+                print_user(users)
     else:
         print("Tidak ada nama folder yang diberikan!")
         print()
