@@ -1,8 +1,6 @@
 import typing, os, datetime
 from collections.abc import Callable
 from models import *
-import random
-from main import FILENAME
 
 # Membuat seed awal berdasarkan epoch time
 now = datetime.datetime.today()
@@ -137,13 +135,15 @@ def csv_parser(folder_path : str, file: FILENAME, arr: Array) -> None:
                     item[prop] = int(text) if text.isnumeric() else text
                     prop += 1
                     text = ""
+                    
+            tupled_item = tuple(item)
             
             if file == "bahan_bangunan.csv":
-                arr.arr[arr.neff] = Bahan(item)
+                arr.arr[arr.neff] = Bahan(tupled_item)
             elif file == "candi.csv":
-                arr.arr[arr.neff] = Candi(item)
+                arr.arr[arr.neff] = Candi(tupled_item)
             else:
-                arr.arr[arr.neff] = User(item)
+                arr.arr[arr.neff] = User(tupled_item)
             arr.neff += 1
             
             r = f.readline()

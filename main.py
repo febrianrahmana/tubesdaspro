@@ -39,7 +39,7 @@ def login(users: Array) -> None:
 def logout() -> None:
     global LOGGED_IN
     if LOGGED_IN.nama != None:
-        LOGGED_IN = User([None for i in range(3)])
+        LOGGED_IN = User((None, None, None))
     else:
         print("Logout gagal!")
         print("Anda belum login, silakan login terlebih dahulu sebelum melakukan logout")
@@ -86,7 +86,7 @@ def summonjin() -> None:
         print("Menyerahkan sesajen...")
         print("Membacakan mantra...")
         
-        jin_baru = User([username, password, jenis_jin])
+        jin_baru = User((username, password, jenis_jin))
         insert_empty(users, jin_baru)
         
         print()
@@ -244,7 +244,7 @@ def undo() -> None:
 # -----------------------=====================================----------------------------------
 
 # Variabel berisi akun yang sedang login dan commandsnya
-LOGGED_IN = User([None for i in range(3)]) # Simpan user yang login
+LOGGED_IN = User((None, None, None)) # Simpan user yang login
 ALLOWED_COMMANDS = DEFAULT_COMMANDS
 
 # Parser untuk input nama folder
@@ -253,13 +253,13 @@ parser.add_argument("nama_folder", help="Folder berisi data csv", nargs='?', def
 args = parser.parse_args()
 
 # Array data user, candi, dan bahan bangunan
-users = Array([[None for i in range(NMAX)], 0])
-candi = Array([[None for i in range(NMAX)], 0])
-bahan_bangunan = Array([[None for i in range(NMAX)], 0])
+users = Array(([None for i in range(NMAX)], 0))
+candi = Array(([None for i in range(NMAX)], 0))
+bahan_bangunan = Array(([None for i in range(NMAX)], 0))
 
 # Array jin dan candi yang telah dihapus
-jin_purgatory = Array([[None for i in range(NMAX)], 0])
-candi_purgatory = Array([[None for i in range(NMAX)], 0])
+jin_purgatory = Array(([None for i in range(NMAX)], 0))
+candi_purgatory = Array(([None for i in range(NMAX)], 0))
 
 # Run ketika file di call
 if __name__ == "__main__":
