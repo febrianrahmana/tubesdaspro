@@ -4,28 +4,28 @@ ROLE_TYPE = typing.Literal["roro_jonggrang", "bandung_bondowoso", "jin_pembangun
 
 class User:
     def __init__(self, arr: tuple[str, str, ROLE_TYPE]) -> None:
-        self.nama = arr[0]
-        self.pwd = arr[1]
-        self.role = arr[2]
+        self.nama: str = arr[0]
+        self.pwd: str = arr[1]
+        self.role: ROLE_TYPE = arr[2]
         
 class Candi:
     def __init__(self, arr: tuple[int, str, int, int, int]) -> None:
-        self.id = arr[0]
-        self.pembuat = arr[1]
-        self.pasir = arr[2]
-        self.batu = arr[3]
-        self.air = arr[4]
+        self.id: int = arr[0]
+        self.pembuat: str = arr[1]
+        self.pasir: int = arr[2]
+        self.batu: int = arr[3]
+        self.air: int = arr[4]
 
 class Bahan:
     def __init__(self, arr: tuple[str, str, int]):
-        self.jenis = arr[0]
-        self.deskripsi = arr[1]
-        self.jumlah = arr[2]
+        self.jenis: str = arr[0]
+        self.deskripsi: str = arr[1]
+        self.jumlah: int = arr[2]
         
 class Command:
     def __init__(self, arr: tuple[str, str]) -> None:
-        self.nama = arr[0]
-        self.deskripsi = arr[1]
+        self.nama: str = arr[0]
+        self.deskripsi: str = arr[1]
 
 VALID_TYPE = typing.Union[Candi, User, Bahan, Command, int, str, list, None]
 FILENAME = typing.Literal["bahan_bangunan.csv", "candi.csv", "user.csv"]
@@ -34,7 +34,7 @@ NMAX = 102
 class Array:
     def __init__(self, arr : tuple[list[VALID_TYPE], int]) -> None:
         self.arr = arr[0]
-        self.neff = arr[1]
+        self.neff: int = arr[1]
 
 BANDUNG_COMMANDS = Array((
     [
