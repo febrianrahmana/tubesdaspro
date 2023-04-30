@@ -1,0 +1,3 @@
+- nambahin print_user buat debug
+- binary choice dari or jadi and
+- benerin newline di f12

@@ -1,7 +1,6 @@
 import typing, os
 from collections.abc import Callable
 from models import *
-from main import FILENAME
 import random
 
 # TODO: append/konso, head, tail
@@ -17,7 +16,7 @@ def not_in(arr: Array, item: VALID_TYPE) -> bool:
 def binary_question(text: str) -> str:
     # Mengulang pertanyaan sampai jawaban antara Y atau N kemudian mengembalikan jawaban tersebut
     choice = ""
-    while choice != "Y" or choice != "N":
+    while choice != "Y" and choice != "N":
         choice = input(text).upper()
     return choice
 
@@ -52,6 +51,7 @@ def insert_empty(arr: Array, item: typing.Union[list, User, Candi], i = 0) -> Ar
         arr.arr[i] = item
         arr.neff += 1
         return arr
+
     
 def find_empty(arr: Array, i = 0) -> int:
     # Mengembalikan index di array yang kosong
@@ -136,3 +136,8 @@ def csv_parser(folder_path : str, file: FILENAME, arr: Array) -> None:
             
             r = f.readline()
     return arr
+
+# buat ngetes doang
+def print_user(arr):
+    for i in range(arr.neff):
+        print(arr.arr[i].nama, arr.arr[i].pwd, arr.arr[i].role)
