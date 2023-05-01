@@ -69,7 +69,9 @@ def search_pembuat(array_candi: Array, nama_pembuat: str) -> int:
 
 def insert_empty(arr: Array, item: typing.Union[list, User, Candi], i = 0) -> Array:
     # Memasukkan item ke index array paling kecil yang kosong 
-    if arr.arr[i] != None:
+    if i >= NMAX:
+        return arr
+    elif arr.arr[i] != None:
         return insert_empty(arr, item, i + 1)
     else:
         arr.arr[i] = item
@@ -109,9 +111,9 @@ def rmv(arr: Array, index: int, i: int = 0) -> Array:
         arr.neff -= 1
         return arr
 
-def pop(arr: Array, i: int) -> VALID_TYPE:
+def pop(arr: Array) -> tuple[Array, VALID_TYPE]:
     # Mengembalikan index terakhir dari suatu array untuk stack, kombinasi dengan remove
-    pass
+    return rmv(arr, arr.neff-1), arr.arr[arr.neff-1]
     
 def max(a: int, b: int) -> int:
     return a if a > b else b

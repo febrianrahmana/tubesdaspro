@@ -431,7 +431,10 @@ def undo(logged_in: User) -> None:
         print("Undo hanya dapat diakses oleh akun Bandung Bondowoso.")
         return
     
-    choice = binary_question("A")
+    choice = binary_question(f"Apakah Anda ingin mengembalikan jin terakhir dengan username {jin_purgatory.arr[jin_purgatory.neff-1].nama} (Y/N)? ")
+    if choice == "Y":
+        jin_purgatory, jin = pop(jin_purgatory)
+        
 # -----------------------=====================================----------------------------------
 
 # Variabel berisi akun yang sedang login dan commandsnya
