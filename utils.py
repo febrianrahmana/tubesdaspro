@@ -126,7 +126,18 @@ def randomize(a: int, b : int) -> int:
     return res % (b + (1-a)) + a
 
 def csv_writer(folder_path : str, users : Array, candi : Array, bahan_bangunan: Array) -> None:
-    pass
+    with open(os.path.join(folder_path, "user.csv"), 'w') as f:
+        for i in range(users.neff):
+            line = users.arr[i].nama + ";" + users.arr[i].pwd + ";" + users.arr[i].role + "\n"
+            f.write(line)
+    with open(os.path.join(folder_path, "candi.csv"), 'w') as f:
+        for i in range(candi.neff):
+            line = str(candi.arr[i].id) + ";" + candi.arr[i].pembuat + ";" + str(candi.arr[i].pasir) + ";" + str(candi.arr[i].batu) + str(candi.arr[i].air) + "\n"
+            f.write(line)
+    with open(os.path.join(folder_path, "bahan_bangunan.csv"), 'w') as f:
+        for i in range(bahan_bangunan.neff):
+            line = bahan_bangunan.arr[i].jenis + ";" + bahan_bangunan.arr[i].deskripsi + ";" + str(bahan_bangunan.arr[i].jumlah) + "\n"
+            f.write(line)
 
 def csv_parser(folder_path : str, file: FILENAME, arr: Array) -> None:
     # Membaca file csv kemudian mengembalikan sebagai array
@@ -154,7 +165,7 @@ def csv_parser(folder_path : str, file: FILENAME, arr: Array) -> None:
                 if r[i] != ';' and r[i] != '\n':
                     text += r[i]
                 else:
-                    item[prop] = int(text) if text.isnumeric() else text
+                    item[prop] = int(text) if text.isnumeric() and file != "user.csv" else text
                     prop += 1
                     text = ""
                     
