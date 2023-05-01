@@ -159,6 +159,9 @@ def bangun(logged_in: User) -> None:
         found_index = find_empty(candi)
         if found_index != -1:
             candi = insert_empty(candi, Candi((found_index, logged_in.nama, pasir, batu, air)))
+        bahan_bangunan.arr[0].jumlah -= pasir
+        bahan_bangunan.arr[1].jumlah -= batu
+        bahan_bangunan.arr[2].jumlah -= air
         print("Candi berhasil dibangun.")
         print(f"Sisa candi yang perlu dibangun: {max(100-candi.neff,0)}")
     else:
@@ -172,6 +175,16 @@ def kumpul(logged_in: User) -> None:
     if logged_in.role != "jin_pengumpul":
         print("Kumpul hanya dapat diakses oleh akun Jin Pengumpul.")
         return
+    
+    pasir = randomize(0,5)
+    batu = randomize(0,5)
+    air = randomize(0,5)
+    
+    bahan_bangunan.arr[0].jumlah += pasir
+    bahan_bangunan.arr[1].jumlah += batu
+    bahan_bangunan.arr[2].jumlah += air
+    
+    print(f"Jin menemukan {pasir} pasir, {batu} batu, {air} air.")
 
 # F08 - Batch Bangun/Kumpul
 # Input: logged in user
