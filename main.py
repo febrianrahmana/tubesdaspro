@@ -90,7 +90,7 @@ def summonjin(logged_in: User) -> None:
         print("Membacakan mantra...")
         
         jin_baru = User((username, password, jenis_jin))
-        insert_empty(users, jin_baru)
+        users = insert_empty(users, jin_baru)
         
         print()
         print(f"Jin {username} berhasil dipanggil!")
@@ -425,7 +425,7 @@ def exit() -> None:
 # B04 - Undo
 # Input: jin purg, candi purg
 def undo(logged_in: User) -> None:
-    global jin_purgatory, candi_purgatory
+    global jin_purgatory, candi_purgatory, candi, users
     
     if logged_in.role != "bandung_bondowoso":
         print("Undo hanya dapat diakses oleh akun Bandung Bondowoso.")
@@ -433,7 +433,24 @@ def undo(logged_in: User) -> None:
     
     choice = binary_question(f"Apakah Anda ingin mengembalikan jin terakhir dengan username {jin_purgatory.arr[jin_purgatory.neff-1].nama} (Y/N)? ")
     if choice == "Y":
-        jin_purgatory, jin = pop(jin_purgatory)
+        # Masukkan jin dari purgatory ke array
+        jin, jin_purgatory = pop(jin_purgatory)
+        
+        users = insert_empty(users, jin)
+                
+        # Masukkan candi dari purgatory ke array
+        for i in range(candi_purgatory.neff):
+            if candi_purgatory.arr[i].pembuat == jin.nama:
+                candi = insert_empty(candi, candi_purgatory.arr[i])
+        
+        found_index = search_pembuat(candi_purgatory, jin.nama)
+        while found_index != -1:
+            candi_purgatory = rmv(candi_purgatory, found_index)
+            found_index = search_pembuat(candi_purgatory, jin.nama)
+
+        print(f"Jin {jin.nama} berhasil dikembalikan beserta candi buatannya.")
+            
+        
         
 # -----------------------=====================================----------------------------------
 
@@ -495,6 +512,8 @@ if __name__ == "__main__":
                 help(ALLOWED_COMMANDS)
             elif cmd == "exit":
                 exit()
+            elif cmd == "undo":
+                undo(LOGGED_IN)
             elif cmd == "debugpurg":
                 print("Jin purgatory:")
                 for i in range(jin_purgatory.neff):
@@ -514,6 +533,8 @@ if __name__ == "__main__":
                     print(bahan_bangunan.arr[i].nama, bahan_bangunan.arr[i].deskripsi, bahan_bangunan.arr[i].jumlah)
             elif cmd == "debugsmallid":
                 print(smallest_id(candi))
+            else:
+                print("Command tidak ditemukan!")
     else:
         print("Tidak ada nama folder yang diberikan!")
         print()
