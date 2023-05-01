@@ -147,21 +147,13 @@ def bangun(logged_in: User) -> None:
         print("Bangun candi hanya dapat diakses oleh akun Jin Pembangun.")
         return
     
-    pasir = randomize(1,5)
-    batu = randomize(1,5)
-    air = randomize(1,5)
+    random_bahan = (randomize(0,5),randomize(0,5),randomize(0,5))
     
-    hasil_pasir = bahan_bangunan.arr[0].jumlah - pasir
-    hasil_batu = bahan_bangunan.arr[1].jumlah - batu
-    hasil_air = bahan_bangunan.arr[2].jumlah - air
-    
-    if hasil_pasir >= 0 and hasil_batu >= 0 and hasil_air >= 0:
+    if bahan_bangunan.arr[0].jumlah - random_bahan[0] >= 0 and bahan_bangunan.arr[1].jumlah - random_bahan[1] >= 0 and bahan_bangunan.arr[2].jumlah - random_bahan[2] >= 0:
         found_index = find_empty(candi)
         if found_index != -1:
-            candi = insert_empty(candi, Candi((found_index, logged_in.nama, pasir, batu, air)))
-        bahan_bangunan.arr[0].jumlah -= pasir
-        bahan_bangunan.arr[1].jumlah -= batu
-        bahan_bangunan.arr[2].jumlah -= air
+            candi = insert_empty(candi, Candi((found_index, logged_in.nama, random_bahan[0], random_bahan[1], random_bahan[2])))
+        bahan_bangunan = kurangi_bahan(bahan_bangunan, random_bahan)
         print("Candi berhasil dibangun.")
         print(f"Sisa candi yang perlu dibangun: {max(100-candi.neff,0)}")
     else:
@@ -172,31 +164,87 @@ def bangun(logged_in: User) -> None:
 # F07 - Jin Pengumpul
 # Input: logged in user
 def kumpul(logged_in: User) -> None:
+    global bahan_bangunan
     if logged_in.role != "jin_pengumpul":
         print("Kumpul hanya dapat diakses oleh akun Jin Pengumpul.")
         return
     
-    pasir = randomize(0,5)
-    batu = randomize(0,5)
-    air = randomize(0,5)
-    
-    bahan_bangunan.arr[0].jumlah += pasir
-    bahan_bangunan.arr[1].jumlah += batu
-    bahan_bangunan.arr[2].jumlah += air
-    
-    print(f"Jin menemukan {pasir} pasir, {batu} batu, {air} air.")
+    random_bahan = (randomize(0,5),randomize(0,5),randomize(0,5))
+    bahan_bangunan = tambah_bahan(bahan_bangunan, random_bahan)
+    print(f"Jin menemukan {random_bahan[0]} pasir, {random_bahan[1]} batu, {random_bahan[2]} air.")
 
 # F08 - Batch Bangun/Kumpul
 # Input: logged in user
-def batchbangun(logged_in: User) -> None:
-    if logged_in.role != "bandung_bondowoso":
-        print("Batch bangun hanya dapat diakses oleh akun Bandung Bondowoso.")
-        return
-
-def batchkumpul(logged_in: User) -> None:
+def batchkumpul(logged_in: User, user_array: Array) -> None:
+    global bahan_bangunan
     if logged_in.role != "bandung_bondowoso":
         print("Batch kumpul hanya dapat diakses oleh akun Bandung Bondowoso.")
         return
+    
+    total_pengumpul = 0
+    for i in range(user_array.neff):
+        if user_array.arr[i].role == "jin_pengumpul":
+            total_pengumpul += 1
+            
+    random_pasir = 0
+    random_batu = 0
+    random_air = 0
+    
+    if total_pengumpul != 0:
+        for _ in range(total_pengumpul):
+            random_pasir += randomize(0,5)
+            random_batu += randomize(0,5)
+            random_air += randomize(0,5)
+        
+        bahan_bangunan = tambah_bahan(bahan_bangunan, (random_pasir, random_batu, random_air))
+        print(f"Mengerahkan {total_pengumpul} jin untuk mengumpulkan bahan")
+        print(f"Jin menemukan total {random_pasir} pasir, {random_batu} batu, dan {random_air} air.")
+        
+    else:
+        print("Kumpul gagal. Anda tidak punya jin pengumpul. Silakan summon terlebih dahulu.")    
+
+def batchbangun(logged_in: User, user_array: Array) -> None:
+    global candi
+    if logged_in.role != "bandung_bondowoso":
+        print("Batch bangun hanya dapat diakses oleh akun Bandung Bondowoso.")
+        return
+    
+    array_pembangun = Array(([None for i in range(NMAX)],0))
+    for i in range(user_array.neff):
+        if user_array.arr[i].role == "jin_pembangun":
+            array_pembangun = insert_empty(array_pembangun, user_array[i])
+    
+    array_candi = Array(([None for i in range(NMAX)], 0))
+    
+    if array_pembangun.neff != 0:
+        for i in range(array_pembangun.neff):
+            candi_buatan = Candi((array_candi.neff+1, array_pembangun.arr[i].nama, randomize(1,5), randomize(1,5), randomize(1,5)))
+            array_candi = insert_empty(array_candi, candi_buatan)
+        
+        total_random_pasir = 0
+        total_random_batu = 0
+        total_random_air = 0
+        for i in range(array_candi.neff):
+            total_random_pasir += array_candi.arr[i].pasir
+            total_random_batu += array_candi.arr[i].batu
+            total_random_air += array_candi.arr[i].air
+            
+        bahan_terpakai = (total_random_pasir, total_random_batu, total_random_air)
+        hasil_kurang_bahan = (bahan_bangunan.arr[0].jumlah - bahan_terpakai[0], bahan_bangunan.arr[1].jumlah - bahan_terpakai[1], bahan_bangunan.arr[2].jumlah - bahan_terpakai[2])
+        
+        print(f"Mengerahkan {array_pembangun.neff} jin untuk membangun candi dengan total bahan {total_random_pasir} pasir, {total_random_batu} batu, dan {total_random_air} air.")
+        
+        if hasil_kurang_bahan[0] >= 0 and hasil_kurang_bahan[1] >= 0 and hasil_kurang_bahan[2] >= 0:
+            bahan_bangunan = kurangi_bahan(bahan_bangunan, bahan_terpakai)
+            for i in range(array_candi.neff):
+                candi = insert_empty(candi, array_candi.arr[i])
+            print(f"Jin berhasil membangun total {array_candi.neff} candi.")
+        else:
+            print(f"Bangun gagal. Kurang {max(neg(hasil_kurang_bahan[0]),0)} pasir, {max(neg(hasil_kurang_bahan[1]),0)} batu, dan {max(neg(hasil_kurang_bahan[2]),0)} air.")
+    else:
+        print("Bangun gagal. Anda tidak punya jin pembangun. Silakan summon terlebih dahulu.")
+        
+    
 
 # F09 - Laporan Jin
 # Input: matriks jin, matriks candi, matriks bahan bangunan
