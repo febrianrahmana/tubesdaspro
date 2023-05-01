@@ -7,15 +7,7 @@ now = datetime.datetime.today()
 seconds = now.timestamp()
 seed = round(seconds)
 
-# Belum dipake
-def not_in(arr: Array, item: VALID_TYPE) -> bool:
-    # Mengembalikan True jika menemukan item dalam array
-    for i in range(arr.neff):
-        if arr.arr[i] == item:
-            return True
-    return False
-
-def neg(a: int):
+def neg(a: int) -> int:
     # Mengembalikan negatif dari a
     return a * -1
 
@@ -37,38 +29,42 @@ def kurangi_bahan(array_bahan: Array, kurangan: tuple[int,int,int]) -> Array:
 
 def binary_question(text: str) -> str:
     # Mengulang pertanyaan sampai jawaban antara Y atau N kemudian mengembalikan jawaban tersebut
-    choice = ""
-    while choice != "Y" and choice != "N":
-        choice = input(text).upper()
+    choice = input(text).upper()
+    if choice != "Y" and choice != "N":
+        return binary_question(text)
     return choice
 
 def search_nama(array: Array, nama: str) -> int:
     # Mencari nama dalam matriks user dan mengembalikan indexnya jika ditemukan
     for i in range(array.neff):
-        if array.arr[i].nama == nama:
+        if array.arr[i] == None:
+            continue
+        elif array.arr[i].nama == nama:
             return i
     return -1
 
 def search_id(candi_array: Array, id: int) -> int:
     # Mencari nama dalam matriks user dan mengembalikan indexnya jika ditemukan
     for i in range(candi_array.neff):
-        if candi_array.arr[i].nama == id:
+        if candi_array.arr[i] == None:
+            continue
+        elif candi_array.arr[i].nama == id:
             return i
     return -1
 
-# Belum dipake
-def length(arr: list) -> int:
-    # Mengembalikan jumlah index di list yang terisi
-    total = NMAX
-    for i in range(NMAX):
-        if arr[i] == None:
-            total -= 1
-    return total
+def search_pembuat(array_candi: Array, nama_pembuat: str) -> int:
+    # Mencari pembangun dalam matriks candi dan mengembalikan indexnya jika ditemukan
+    for i in range(array_candi.neff):
+        if array_candi.arr[i] == None:
+            continue
+        elif array_candi.arr[i].pembuat == nama_pembuat:
+            return i
+    return -1
 
 def insert_empty(arr: Array, item: typing.Union[list, User, Candi], i = 0) -> Array:
     # Memasukkan item ke index array paling kecil yang kosong 
     if arr.arr[i] != None:
-        insert_empty(arr, item, i + 1)
+        return insert_empty(arr, item, i + 1)
     else:
         arr.arr[i] = item
         arr.neff += 1
@@ -80,7 +76,7 @@ def find_empty(arr: Array, i = 0) -> int:
     if i >= NMAX:
         return -1
     elif arr.arr[i] != None:
-        find_empty(arr, i + 1)
+        return find_empty(arr, i + 1)
     else:
         return i
 
@@ -107,8 +103,8 @@ def rmv(arr: Array, index: int, i: int = 0) -> Array:
     else:
         return rmv(arr, index, i + 1)
 
-def pop(arr: Array, i: int) -> Array:
-    # Menghapus suatu index pada array dan menggeser index
+def pop(arr: Array, i: int) -> VALID_TYPE:
+    # Mengembalikan index terakhir dari suatu array untuk stack, kombinasi dengan remove
     if arr.arr[i] != None:
         arr.arr[i] = arr.arr[i+1]
         return pop(arr,i+1)
