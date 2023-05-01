@@ -106,7 +106,7 @@ def rmv(arr: Array, index: int, i: int = 0) -> Array:
     # Mengosongkan suatu index pada list
     if arr.arr[i] != None:
         arr.arr[i] = arr.arr[i+1]
-        return pop(arr,i+1)
+        return rmv(arr,i+1)
     else:
         arr.neff -= 1
         return arr
