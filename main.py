@@ -46,8 +46,11 @@ def logout() -> None:
         
 # F03 - Summon Jin
 # Input: matriks user
-def summonjin() -> None:
+def summonjin(logged_in: User) -> None:
     global users
+    if logged_in.role != "bandung_bondowoso":
+        print("Summon jin hanya dapat diakses oleh akun Bandung Bondowoso.")
+        return
     if users.neff < 102:
         print("""Jenis jin yang dapat dipanggil:
             (1) Pengumpul - Bertugas mengumpulkan bahan bangunan
@@ -96,8 +99,11 @@ def summonjin() -> None:
 
 # F04 - Hilangkan Jin
 # Input: matriks user
-def hapusjin() -> None:
+def hapusjin(logged_in: User) -> None:
     global users
+    if logged_in.role != "bandung_bondowoso":
+        print("Menghilangkan jin hanya dapat diakses oleh akun Bandung Bondowoso.")
+        return
     username = input("Masukkan username jin: ")
     found_index = search_nama(users, username)
     
@@ -111,8 +117,11 @@ def hapusjin() -> None:
             
 # F05 - Ubah Tipe Jin
 # Input: users
-def ubahjin() -> None:
+def ubahjin(logged_in: User) -> None:
     global users
+    if logged_in.role != "bandung_bondowoso":
+        print("Ubah tipe jin hanya dapat diakses oleh akun Bandung Bondowoso.")
+        return
     username = input("Masukkan username jin: ")
     found_index = search_nama(users, username)
     
@@ -132,33 +141,76 @@ def ubahjin() -> None:
         
 # F06 - Jin Pembangun
 # Input: logged in user, 
-def bangun() -> None:
-    global LOGGED_IN, bahan_bangunan
-    pass
+def bangun(logged_in: User) -> None:
+    global bahan_bangunan, candi
+    if logged_in.role != "jin_pembangun":
+        print("Bangun candi hanya dapat diakses oleh akun Jin Pembangun.")
+        return
 
 # F07 - Jin Pengumpul
 # Input: logged in user
-def bangun() -> None:
-    pass
+def kumpul(logged_in: User) -> None:
+    if logged_in.role != "jin_pengumpul":
+        print("Kumpul hanya dapat diakses oleh akun Jin Pengumpul.")
+        return
 
 # F08 - Batch Bangun/Kumpul
 # Input: logged in user
-def batchbangun() -> None:
-    pass
+def batchbangun(logged_in: User) -> None:
+    if logged_in.role != "bandung_bondowoso":
+        print("Batch bangun hanya dapat diakses oleh akun Bandung Bondowoso.")
+        return
 
-def batchkumpul() -> None:
-    pass
+def batchkumpul(logged_in: User) -> None:
+    if logged_in.role != "bandung_bondowoso":
+        print("Batch kumpul hanya dapat diakses oleh akun Bandung Bondowoso.")
+        return
 
 # F09 - Laporan Jin
 # Input: matriks jin, matriks candi, matriks bahan bangunan
-def laporanjin() -> None:
-    pass
+def laporanjin(users: Array, candi: Array, bahan_bangunan: Array, logged_in: User) -> None:
+    laporan_jin = Array(([None for i in range(NMAX)], 0))
+    total_pengumpul = 0
+    if logged_in.role != "bandung_bondowoso":
+        print("Laporan jin hanya dapat diakses oleh akun Bandung Bondowoso.")
+        return
+    for i in range(candi.neff):
+        found_index = search_nama(laporan_jin, candi.arr[i].pembuat)
+        if found_index != -1:
+            laporan_jin.arr[found_index].jumlah += 1
+        else:
+            laporan_jin = insert_empty(laporan_jin, JinReport((candi.arr[i].pembuat, 1)))
+    
+    for i in range(users.neff):
+        if users.arr[i].role == "jin_pembangun" and search_nama(laporan_jin, users.arr[i].nama) == -1:
+            laporan_jin = insert_empty(laporan_jin, JinReport((users.arr[i].nama, 0)))
+        elif users.arr[i].role == "jin_pengumpul":
+            total_pengumpul += 1
+            
+    laporan_jin = bubble_sort(laporan_jin, jin_sort)
+    
+    print(f"> Total Jin: {laporan_jin.neff+total_pengumpul}")
+    print(f"> Total Jin Pengumpul: {total_pengumpul}")
+    print(f"> Total Jin Pembangun: {laporan_jin.neff}")
+    
+    if laporan_jin.neff == 0:
+        print(f"> Jin Terajin: -")
+        print(f"> Jin Termalas: -")
+    else:
+        print(f"> Jin Terajin: {laporan_jin.arr[0].nama}")
+        print(f"> Jin Termalas: {laporan_jin.arr[laporan_jin.neff-1].nama}")
+    
+    # Asumsi pasir di index 0, batu di index 1, air di index 2
+    print(f"> Jumlah Pasir: {bahan_bangunan.arr[0].jumlah} unit")
+    print(f"> Jumlah Air: {bahan_bangunan.arr[2].jumlah} unit")
+    print(f"> Jumlah Batu: {bahan_bangunan.arr[1].jumlah} unit")
 
 # F10 - Laporan Candi
 # Input: matriks candi
 def laporancandi(candi: Array, logged_in: User) -> None:
     if logged_in.role != "bandung_bondowoso":
         print("Laporan candi hanya dapat diakses oleh akun Bandung Bondowoso.")
+        return
     
     def harga_candi(candi: Candi):
         return 10_000 * candi.pasir + 15_000 * candi.batu + 7_500 * candi.air
@@ -177,23 +229,23 @@ def laporancandi(candi: Array, logged_in: User) -> None:
     candi_termurah = Candi((None,None,0,0,0))
     
     if candi.neff > 0:
-        jumlah_pasir = 0
-        jumlah_batu = 0
-        jumlah_air = 0
+        total_pasir = 0
+        total_batu = 0
+        total_air = 0
         
         for i in range(candi.neff):
-            jumlah_pasir += candi.arr[i].pasir
-            jumlah_batu += candi.arr[i].batu
-            jumlah_air += candi.arr[i].air
+            total_pasir += candi.arr[i].pasir
+            total_batu += candi.arr[i].batu
+            total_air += candi.arr[i].air
             if harga_candi(candi.arr[i]) > harga_candi(candi_termahal):
                 candi_termahal = candi.arr[i]
             elif harga_candi(candi.arr[i]) < harga_candi(candi_termurah):
                 candi_termurah = candi.arr[i]
                 
         print(f"> Total Candi: {candi.neff}")
-        print(f"> Total Pasir yang digunakan: {jumlah_pasir}")
-        print(f"> Total Batu yang digunakan: {jumlah_batu}")
-        print(f"> Total Air yang digunakan: {jumlah_air}")
+        print(f"> Total Pasir yang digunakan: {total_pasir}")
+        print(f"> Total Batu yang digunakan: {total_batu}")
+        print(f"> Total Air yang digunakan: {total_air}")
         print(f"> ID Candi Termahal: {candi_termahal.id} (Rp {formatting(harga_candi(candi_termahal))})")
         print(f"> ID Candi Termurah: {candi_termurah.id} (Rp {formatting(harga_candi(candi_termahal))})")
     else:
@@ -206,8 +258,11 @@ def laporancandi(candi: Array, logged_in: User) -> None:
 
 # F11 - Hancurkan Candi
 # Input: matriks candi
-def hancurkancandi() -> None:
+def hancurkancandi(logged_in: User) -> None:
     global candi
+    if logged_in.role != "roro_jonggrang":
+        print("Hancurkan candi hanya dapat diakses oleh akun Roro Jonggrang.")
+        return
     id_candi = int(input("Masukkan ID candi: "))
     found_index = search_id(candi, id_candi)
     
@@ -221,8 +276,11 @@ def hancurkancandi() -> None:
 
 # F12 - Ayam Berkokok
 # Input: matriks candi
-def ayamberkokok() -> None:
+def ayamberkokok(logged_in: User) -> None:
     global candi
+    if logged_in.role != "roro_jonggrang":
+        print("Ayam berkokok hanya dapat diakses oleh akun Roro Jonggrang.")
+        return
     print("Kukuruyuk.. Kukuruyuk..")
     print(f"\nJumlah Candi: {candi.neff}\n")
     if candi.neff < 100:
@@ -316,12 +374,16 @@ if __name__ == "__main__":
             cmd = input(">>> ")
             if cmd == "login":
                 login(users)
-            elif cmd == "help":
-                help(ALLOWED_COMMANDS)
-            elif cmd == "laporancandi":
-                laporancandi(candi)
             elif cmd == "logout":
                 logout()
+            elif cmd == "summonjin":
+                summonjin(LOGGED_IN)
+            elif cmd == "hapusjin":
+                hapusjin()
+            elif cmd == "laporancandi":
+                laporancandi(candi)
+            elif cmd == "help":
+                help(ALLOWED_COMMANDS)
             elif cmd == "debug":
                 print_user(users)
     else:
