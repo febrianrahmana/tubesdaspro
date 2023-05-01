@@ -96,6 +96,9 @@ def pop(arr: Array, i: int) -> Array:
         arr.neff -= 1
         return arr
     
+def max(a: int, b: int) -> int:
+    return a if a > b else b
+
 def randomize(a: int, b : int) -> int:
     # Mengembalikan jumlah random dari range a sampai b menggunakan lcg
     global seed

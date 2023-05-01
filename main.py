@@ -146,6 +146,25 @@ def bangun(logged_in: User) -> None:
     if logged_in.role != "jin_pembangun":
         print("Bangun candi hanya dapat diakses oleh akun Jin Pembangun.")
         return
+    
+    pasir = randomize(1,5)
+    batu = randomize(1,5)
+    air = randomize(1,5)
+    
+    hasil_pasir = bahan_bangunan.arr[0].jumlah - pasir
+    hasil_batu = bahan_bangunan.arr[1].jumlah - batu
+    hasil_air = bahan_bangunan.arr[2].jumlah - air
+    
+    if hasil_pasir >= 0 and hasil_batu >= 0 and hasil_air >= 0:
+        found_index = find_empty(candi)
+        if found_index != -1:
+            candi = insert_empty(candi, Candi((found_index, logged_in.nama, pasir, batu, air)))
+        print("Candi berhasil dibangun.")
+        print(f"Sisa candi yang perlu dibangun: {max(100-candi.neff,0)}")
+    else:
+        print("Bahan bangunan tidak mencukupi.")
+        print("Candi tidak bisa dibangun!")
+        
 
 # F07 - Jin Pengumpul
 # Input: logged in user
