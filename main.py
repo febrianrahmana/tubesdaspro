@@ -235,6 +235,7 @@ def batchbangun(logged_in: User, user_array: Array) -> None:
         print(f"Mengerahkan {array_pembangun.neff} jin untuk membangun candi dengan total bahan {total_random_pasir} pasir, {total_random_batu} batu, dan {total_random_air} air.")
         
         if hasil_kurang_bahan[0] >= 0 and hasil_kurang_bahan[1] >= 0 and hasil_kurang_bahan[2] >= 0:
+            bahan_bangunan = kurangi_bahan(bahan_bangunan, bahan_terpakai)
             for i in range(array_candi.neff):
                 candi = insert_empty(candi, array_candi.arr[i])
             print(f"Jin berhasil membangun total {array_candi.neff} candi.")

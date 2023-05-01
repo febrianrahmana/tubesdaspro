@@ -27,11 +27,11 @@ def tambah_bahan(array_bahan: Array, tambahan: tuple[int,int,int]) -> Array:
     
     return array_bahan
 
-def kurangi_bahan(array_bahan: Array, tambahan: tuple[int,int,int]) -> Array:
+def kurangi_bahan(array_bahan: Array, kurangan: tuple[int,int,int]) -> Array:
     # Asumsi pasir index 0, batu index 1, air index 2
-    array_bahan.arr[0].jumlah -= tambahan[0]
-    array_bahan.arr[1].jumlah -= tambahan[1]
-    array_bahan.arr[2].jumlah -= tambahan[2]
+    array_bahan.arr[0].jumlah -= kurangan[0]
+    array_bahan.arr[1].jumlah -= kurangan[1]
+    array_bahan.arr[2].jumlah -= kurangan[2]
     
     return array_bahan
 
