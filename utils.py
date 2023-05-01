@@ -102,21 +102,16 @@ def bubble_sort(arr: Array, comparator: Callable[[JinReport, JinReport], bool]) 
 
 def rmv(arr: Array, index: int, i: int = 0) -> Array:
     # Mengosongkan suatu index pada list
-    if index == i:
-        arr.arr[i] = None
-        arr.neff -= 1
-        return arr
-    else:
-        return rmv(arr, index, i + 1)
-
-def pop(arr: Array, i: int) -> VALID_TYPE:
-    # Mengembalikan index terakhir dari suatu array untuk stack, kombinasi dengan remove
     if arr.arr[i] != None:
         arr.arr[i] = arr.arr[i+1]
         return pop(arr,i+1)
     else:
         arr.neff -= 1
         return arr
+
+def pop(arr: Array, i: int) -> VALID_TYPE:
+    # Mengembalikan index terakhir dari suatu array untuk stack, kombinasi dengan remove
+    pass
     
 def max(a: int, b: int) -> int:
     return a if a > b else b

@@ -111,12 +111,12 @@ def hapusjin(logged_in: User) -> None:
         choice = binary_question(f"Apakah anda yakin ingin menghapus jin dengan username {username} (Y/N)? ")
         if choice == "Y":
             jin_purgatory = insert_empty(jin_purgatory, users.arr[found_index])
-            users = pop(users, found_index)
+            users = rmv(users, found_index)
             
             index_candi_pembuat = search_pembuat(candi, username)
             while index_candi_pembuat != -1:
                 candi_purgatory = insert_empty(candi_purgatory, candi.arr[index_candi_pembuat])
-                candi = pop(candi, index_candi_pembuat)
+                candi = rmv(candi, index_candi_pembuat)
                 index_candi_pembuat = search_pembuat(candi, username)
             print("\nJin telah berhasil dihapus dari alam gaib.")
     else:
@@ -354,7 +354,7 @@ def hancurkancandi(logged_in: User) -> None:
     if found_index != -1:
         choice = binary_question(f"Apakah Anda yakin ingin menghancurkan candi ID: {id_candi} (Y/N)? ")
         if choice == "Y":
-            candi = pop(candi, found_index)
+            candi = rmv(candi, found_index)
             print("\nCandi telah berhasil dihancurkan.")
     else:
         print("\nTidak ada candi dengan ID tersebut.")
@@ -430,6 +430,8 @@ def undo(logged_in: User) -> None:
     if logged_in.role != "bandung_bondowoso":
         print("Undo hanya dapat diakses oleh akun Bandung Bondowoso.")
         return
+    
+    choice = binary_question("A")
 # -----------------------=====================================----------------------------------
 
 # Variabel berisi akun yang sedang login dan commandsnya
