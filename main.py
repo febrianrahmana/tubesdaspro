@@ -111,12 +111,12 @@ def hapusjin(logged_in: User) -> None:
         choice = binary_question(f"Apakah anda yakin ingin menghapus jin dengan username {username} (Y/N)? ")
         if choice == "Y":
             jin_purgatory = insert_empty(jin_purgatory, users.arr[found_index])
-            users = rmv(users, found_index)
+            users = pop(users, found_index)
             
             index_candi_pembuat = search_pembuat(candi, username)
             while index_candi_pembuat != -1:
                 candi_purgatory = insert_empty(candi_purgatory, candi.arr[index_candi_pembuat])
-                candi = rmv(candi, index_candi_pembuat)
+                candi = pop(candi, index_candi_pembuat)
                 index_candi_pembuat = search_pembuat(candi, username)
             print("\nJin telah berhasil dihapus dari alam gaib.")
     else:
@@ -159,7 +159,7 @@ def bangun(logged_in: User) -> None:
     if bahan_bangunan.arr[0].jumlah - random_bahan[0] >= 0 and bahan_bangunan.arr[1].jumlah - random_bahan[1] >= 0 and bahan_bangunan.arr[2].jumlah - random_bahan[2] >= 0:
         found_index = find_empty(candi)
         if found_index != -1:
-            candi = insert_empty(candi, Candi((found_index+1, logged_in.nama, random_bahan[0], random_bahan[1], random_bahan[2])))
+            candi = insert_empty(candi, Candi((smallest_id(candi), logged_in.nama, random_bahan[0], random_bahan[1], random_bahan[2])))
         bahan_bangunan = kurangi_bahan(bahan_bangunan, random_bahan)
         print("Candi berhasil dibangun.")
         print(f"Sisa candi yang perlu dibangun: {max(100-candi.neff,0)}")
@@ -224,7 +224,7 @@ def batchbangun(logged_in: User, user_array: Array) -> None:
     
     if array_pembangun.neff != 0:
         for i in range(array_pembangun.neff):
-            candi_buatan = Candi((array_candi.neff+1, array_pembangun.arr[i].nama, randomize(1,5), randomize(1,5), randomize(1,5)))
+            candi_buatan = Candi((smallest_id(candi), array_pembangun.arr[i].nama, randomize(1,5), randomize(1,5), randomize(1,5)))
             array_candi = insert_empty(array_candi, candi_buatan)
         
         total_random_pasir = 0
@@ -243,6 +243,7 @@ def batchbangun(logged_in: User, user_array: Array) -> None:
         if hasil_kurang_bahan[0] >= 0 and hasil_kurang_bahan[1] >= 0 and hasil_kurang_bahan[2] >= 0:
             bahan_bangunan = kurangi_bahan(bahan_bangunan, bahan_terpakai)
             for i in range(array_candi.neff):
+                array_candi.arr[i].id = smallest_id(candi)
                 candi = insert_empty(candi, array_candi.arr[i])
             print(f"Jin berhasil membangun total {array_candi.neff} candi.")
         else:
@@ -353,7 +354,7 @@ def hancurkancandi(logged_in: User) -> None:
     if found_index != -1:
         choice = binary_question(f"Apakah Anda yakin ingin menghancurkan candi ID: {id_candi} (Y/N)? ")
         if choice == "Y":
-            candi = rmv(candi, found_index)
+            candi = pop(candi, found_index)
             print("\nCandi telah berhasil dihancurkan.")
     else:
         print("\nTidak ada candi dengan ID tersebut.")
@@ -506,6 +507,8 @@ if __name__ == "__main__":
             elif cmd == "debugbahan":
                 for i in range(bahan_bangunan.neff):
                     print(bahan_bangunan.arr[i].nama, bahan_bangunan.arr[i].deskripsi, bahan_bangunan.arr[i].jumlah)
+            elif cmd == "debugsmallid":
+                print(smallest_id(candi))
     else:
         print("Tidak ada nama folder yang diberikan!")
         print()

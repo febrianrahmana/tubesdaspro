@@ -11,6 +11,12 @@ def neg(a: int) -> int:
     # Mengembalikan negatif dari a
     return a * -1
 
+def smallest_id(array_candi: Array, id = 1):
+    for i in range(array_candi.neff):
+        if array_candi.arr[i].id == id:
+            return smallest_id(array_candi, id + 1)
+    return id
+
 def tambah_bahan(array_bahan: Array, tambahan: tuple[int,int,int]) -> Array:
     # Asumsi pasir index 0, batu index 1, air index 2
     array_bahan.arr[0].jumlah += tambahan[0]
