@@ -54,7 +54,7 @@ def search_id(candi_array: Array, id: int) -> int:
     for i in range(candi_array.neff):
         if candi_array.arr[i] == None:
             continue
-        elif candi_array.arr[i].nama == id:
+        elif candi_array.arr[i].id == id:
             return i
     return -1
 
@@ -69,9 +69,7 @@ def search_pembuat(array_candi: Array, nama_pembuat: str) -> int:
 
 def insert_empty(arr: Array, item: typing.Union[list, User, Candi], i = 0) -> Array:
     # Memasukkan item ke index array paling kecil yang kosong 
-    if i >= NMAX:
-        return arr
-    elif arr.arr[i] != None:
+    if arr.arr[i] != None and not i+1 >= NMAX:
         return insert_empty(arr, item, i + 1)
     else:
         arr.arr[i] = item
@@ -81,9 +79,7 @@ def insert_empty(arr: Array, item: typing.Union[list, User, Candi], i = 0) -> Ar
     
 def find_empty(arr: Array, i = 0) -> int:
     # Mengembalikan index di array yang kosong
-    if i >= NMAX:
-        return -1
-    elif arr.arr[i] != None:
+    if arr.arr[i] != None and not i+1 >= NMAX:
         return find_empty(arr, i + 1)
     else:
         return i
@@ -102,18 +98,18 @@ def bubble_sort(arr: Array, comparator: Callable[[JinReport, JinReport], bool]) 
                 arr.arr[i],arr.arr[j] = arr.arr[j], arr.arr[i]
     return arr
 
-def rmv(arr: Array, index: int, i: int = 0) -> Array:
+def rmv(arr: Array, i: int) -> Array:
     # Mengosongkan suatu index pada list
-    if arr.arr[i] != None:
+    if arr.arr[i] != None and not i+1 >= NMAX:
         arr.arr[i] = arr.arr[i+1]
         return rmv(arr,i+1)
     else:
         arr.neff -= 1
         return arr
 
-def pop(arr: Array) -> tuple[Array, VALID_TYPE]:
+def pop(arr: Array) -> tuple[VALID_TYPE, Array]:
     # Mengembalikan index terakhir dari suatu array untuk stack, kombinasi dengan remove
-    return rmv(arr, arr.neff-1), arr.arr[arr.neff-1]
+    return (arr.arr[arr.neff-1], rmv(arr, arr.neff-1))
     
 def max(a: int, b: int) -> int:
     return a if a > b else b
