@@ -11,7 +11,7 @@ def neg(a: int) -> int:
     # Mengembalikan negatif dari a
     return a * -1
 
-def smallest_id(array_candi: Array, id = 1):
+def smallest_id(array_candi: Array, id: int = 1) -> int:
     for i in range(array_candi.neff):
         if array_candi.arr[i].id == id:
             return smallest_id(array_candi, id + 1)
@@ -67,7 +67,7 @@ def search_pembuat(array_candi: Array, nama_pembuat: str) -> int:
             return i
     return -1
 
-def insert_empty(arr: Array, item: typing.Union[list, User, Candi], i = 0) -> Array:
+def insert_empty(arr: Array, item: typing.Union[list, User, Candi], i: int = 0) -> Array:
     # Memasukkan item ke index array paling kecil yang kosong 
     if arr.arr[i] != None and not i+1 >= NMAX:
         return insert_empty(arr, item, i + 1)
@@ -77,7 +77,7 @@ def insert_empty(arr: Array, item: typing.Union[list, User, Candi], i = 0) -> Ar
         return arr
 
     
-def find_empty(arr: Array, i = 0) -> int:
+def find_empty(arr: Array, i: int = 0) -> int:
     # Mengembalikan index di array yang kosong
     if arr.arr[i] != None and not i+1 >= NMAX:
         return find_empty(arr, i + 1)
@@ -127,14 +127,17 @@ def randomize(a: int, b : int) -> int:
 
 def csv_writer(folder_path : str, users : Array, candi : Array, bahan_bangunan: Array) -> None:
     with open(os.path.join(folder_path, "user.csv"), 'w') as f:
+        f.write("username;password;role\n")
         for i in range(users.neff):
             line = users.arr[i].nama + ";" + users.arr[i].pwd + ";" + users.arr[i].role + "\n"
             f.write(line)
     with open(os.path.join(folder_path, "candi.csv"), 'w') as f:
+        f.write("id;pembuat;pasir;batu;air\n")
         for i in range(candi.neff):
             line = str(candi.arr[i].id) + ";" + candi.arr[i].pembuat + ";" + str(candi.arr[i].pasir) + ";" + str(candi.arr[i].batu) + str(candi.arr[i].air) + "\n"
             f.write(line)
     with open(os.path.join(folder_path, "bahan_bangunan.csv"), 'w') as f:
+        f.write("nama;deskripsi;jumlah\n")
         for i in range(bahan_bangunan.neff):
             line = bahan_bangunan.arr[i].jenis + ";" + bahan_bangunan.arr[i].deskripsi + ";" + str(bahan_bangunan.arr[i].jumlah) + "\n"
             f.write(line)
@@ -181,8 +184,3 @@ def csv_parser(folder_path : str, file: FILENAME, arr: Array) -> None:
             
             r = f.readline()
     return arr
-
-# buat ngetes doang
-def print_user(arr):
-    for i in range(arr.neff):
-        print(arr.arr[i].nama, arr.arr[i].pwd, arr.arr[i].role)
