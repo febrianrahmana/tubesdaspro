@@ -134,7 +134,7 @@ def csv_writer(folder_path : str, users : Array, candi : Array, bahan_bangunan: 
     with open(os.path.join(folder_path, "candi.csv"), 'w') as f:
         f.write("id;pembuat;pasir;batu;air\n")
         for i in range(candi.neff):
-            line = str(candi.arr[i].id) + ";" + candi.arr[i].pembuat + ";" + str(candi.arr[i].pasir) + ";" + str(candi.arr[i].batu) + str(candi.arr[i].air) + "\n"
+            line = str(candi.arr[i].id) + ";" + candi.arr[i].pembuat + ";" + str(candi.arr[i].pasir) + ";" + str(candi.arr[i].batu) + ";" + str(candi.arr[i].air) + "\n"
             f.write(line)
     with open(os.path.join(folder_path, "bahan_bangunan.csv"), 'w') as f:
         f.write("nama;deskripsi;jumlah\n")
