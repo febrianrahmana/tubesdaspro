@@ -100,7 +100,7 @@ def summonjin(logged_in: User) -> None:
 # F04 - Hilangkan Jin
 # Input: matriks user
 def hapusjin(logged_in: User) -> None:
-    global users
+    global users, bahan_bangunan, jin_purgatory, candi_purgatory, candi
     if logged_in.role != "bandung_bondowoso":
         print("Menghilangkan jin hanya dapat diakses oleh akun Bandung Bondowoso.")
         return
@@ -110,8 +110,15 @@ def hapusjin(logged_in: User) -> None:
     if found_index != -1:
         choice = binary_question(f"Apakah anda yakin ingin menghapus jin dengan username {username} (Y/N)? ")
         if choice == "Y":
+            jin_purgatory = insert_empty(jin_purgatory, users.arr[found_index])
+            users = rmv(users, found_index)
+            
+            index_candi_pembuat = search_pembuat(candi, username)
+            while index_candi_pembuat != -1:
+                candi_purgatory = insert_empty(candi_purgatory, candi.arr[index_candi_pembuat])
+                candi = rmv(candi, index_candi_pembuat)
+                index_candi_pembuat = search_pembuat(candi, username)
             print("\nJin telah berhasil dihapus dari alam gaib.")
-            # TODO add removing mechanism, remember to remove candi made by said jin (to implement undo, save jin+candi to an array, make a model for it?)
     else:
         print("\nTidak ada jin dengan username tersebut.")
             
@@ -152,14 +159,13 @@ def bangun(logged_in: User) -> None:
     if bahan_bangunan.arr[0].jumlah - random_bahan[0] >= 0 and bahan_bangunan.arr[1].jumlah - random_bahan[1] >= 0 and bahan_bangunan.arr[2].jumlah - random_bahan[2] >= 0:
         found_index = find_empty(candi)
         if found_index != -1:
-            candi = insert_empty(candi, Candi((found_index, logged_in.nama, random_bahan[0], random_bahan[1], random_bahan[2])))
+            candi = insert_empty(candi, Candi((smallest_id(candi), logged_in.nama, random_bahan[0], random_bahan[1], random_bahan[2])))
         bahan_bangunan = kurangi_bahan(bahan_bangunan, random_bahan)
         print("Candi berhasil dibangun.")
         print(f"Sisa candi yang perlu dibangun: {max(100-candi.neff,0)}")
     else:
         print("Bahan bangunan tidak mencukupi.")
-        print("Candi tidak bisa dibangun!")
-        
+        print("Candi tidak bisa dibangun!")      
 
 # F07 - Jin Pengumpul
 # Input: logged in user
@@ -204,7 +210,7 @@ def batchkumpul(logged_in: User, user_array: Array) -> None:
         print("Kumpul gagal. Anda tidak punya jin pengumpul. Silakan summon terlebih dahulu.")    
 
 def batchbangun(logged_in: User, user_array: Array) -> None:
-    global candi
+    global candi, bahan_bangunan
     if logged_in.role != "bandung_bondowoso":
         print("Batch bangun hanya dapat diakses oleh akun Bandung Bondowoso.")
         return
@@ -212,13 +218,13 @@ def batchbangun(logged_in: User, user_array: Array) -> None:
     array_pembangun = Array(([None for i in range(NMAX)],0))
     for i in range(user_array.neff):
         if user_array.arr[i].role == "jin_pembangun":
-            array_pembangun = insert_empty(array_pembangun, user_array[i])
+            array_pembangun = insert_empty(array_pembangun, user_array.arr[i])
     
     array_candi = Array(([None for i in range(NMAX)], 0))
     
     if array_pembangun.neff != 0:
         for i in range(array_pembangun.neff):
-            candi_buatan = Candi((array_candi.neff+1, array_pembangun.arr[i].nama, randomize(1,5), randomize(1,5), randomize(1,5)))
+            candi_buatan = Candi((smallest_id(candi), array_pembangun.arr[i].nama, randomize(1,5), randomize(1,5), randomize(1,5)))
             array_candi = insert_empty(array_candi, candi_buatan)
         
         total_random_pasir = 0
@@ -237,14 +243,13 @@ def batchbangun(logged_in: User, user_array: Array) -> None:
         if hasil_kurang_bahan[0] >= 0 and hasil_kurang_bahan[1] >= 0 and hasil_kurang_bahan[2] >= 0:
             bahan_bangunan = kurangi_bahan(bahan_bangunan, bahan_terpakai)
             for i in range(array_candi.neff):
+                array_candi.arr[i].id = smallest_id(candi)
                 candi = insert_empty(candi, array_candi.arr[i])
             print(f"Jin berhasil membangun total {array_candi.neff} candi.")
         else:
             print(f"Bangun gagal. Kurang {max(neg(hasil_kurang_bahan[0]),0)} pasir, {max(neg(hasil_kurang_bahan[1]),0)} batu, dan {max(neg(hasil_kurang_bahan[2]),0)} air.")
     else:
         print("Bangun gagal. Anda tidak punya jin pembangun. Silakan summon terlebih dahulu.")
-        
-    
 
 # F09 - Laporan Jin
 # Input: matriks jin, matriks candi, matriks bahan bangunan
@@ -263,12 +268,11 @@ def laporanjin(users: Array, candi: Array, bahan_bangunan: Array, logged_in: Use
     
     for i in range(users.neff):
         if users.arr[i].role == "jin_pembangun" and search_nama(laporan_jin, users.arr[i].nama) == -1:
+            print("current",users.arr[i].nama, users.arr[i].role)
             laporan_jin = insert_empty(laporan_jin, JinReport((users.arr[i].nama, 0)))
         elif users.arr[i].role == "jin_pengumpul":
             total_pengumpul += 1
-            
-    laporan_jin = bubble_sort(laporan_jin, jin_sort)
-    
+        
     print(f"> Total Jin: {laporan_jin.neff+total_pengumpul}")
     print(f"> Total Jin Pengumpul: {total_pengumpul}")
     print(f"> Total Jin Pembangun: {laporan_jin.neff}")
@@ -277,6 +281,7 @@ def laporanjin(users: Array, candi: Array, bahan_bangunan: Array, logged_in: Use
         print(f"> Jin Terajin: -")
         print(f"> Jin Termalas: -")
     else:
+        laporan_jin = bubble_sort(laporan_jin, jin_sort)
         print(f"> Jin Terajin: {laporan_jin.arr[0].nama}")
         print(f"> Jin Termalas: {laporan_jin.arr[laporan_jin.neff-1].nama}")
     
@@ -305,13 +310,13 @@ def laporancandi(candi: Array, logged_in: User) -> None:
                 terpisah_titik += terpisah_koma[i]
         return terpisah_titik
     
-    candi_termahal = Candi((None,None,0,0,0))
-    candi_termurah = Candi((None,None,0,0,0))
-    
     if candi.neff > 0:
         total_pasir = 0
         total_batu = 0
         total_air = 0
+        
+        candi_termahal = candi.arr[0]
+        candi_termurah = candi.arr[0]
         
         for i in range(candi.neff):
             total_pasir += candi.arr[i].pasir
@@ -327,7 +332,7 @@ def laporancandi(candi: Array, logged_in: User) -> None:
         print(f"> Total Batu yang digunakan: {total_batu}")
         print(f"> Total Air yang digunakan: {total_air}")
         print(f"> ID Candi Termahal: {candi_termahal.id} (Rp {formatting(harga_candi(candi_termahal))})")
-        print(f"> ID Candi Termurah: {candi_termurah.id} (Rp {formatting(harga_candi(candi_termahal))})")
+        print(f"> ID Candi Termurah: {candi_termurah.id} (Rp {formatting(harga_candi(candi_termurah))})")
     else:
         print("> Total Candi: 0")
         print("> Total Pasir yang digunakan: 0")
@@ -356,8 +361,7 @@ def hancurkancandi(logged_in: User) -> None:
 
 # F12 - Ayam Berkokok
 # Input: matriks candi
-def ayamberkokok(logged_in: User) -> None:
-    global candi
+def ayamberkokok(candi: Array, logged_in: User) -> None:
     if logged_in.role != "roro_jonggrang":
         print("Ayam berkokok hanya dapat diakses oleh akun Roro Jonggrang.")
         return
@@ -372,7 +376,6 @@ def ayamberkokok(logged_in: User) -> None:
         print("Yah, Bandung Bondowoso memenangkan permainan!")
         sys.exit()
     
-
 # F13 - Load
 # Input: nama folder, 
 def load(path : str) -> None:
@@ -421,9 +424,17 @@ def exit() -> None:
     
 # B04 - Undo
 # Input: jin purg, candi purg
-def undo() -> None:
+def undo(logged_in: User) -> None:
     global jin_purgatory, candi_purgatory
-    pass
+    
+    if logged_in.role != "bandung_bondowoso":
+        print("Undo hanya dapat diakses oleh akun Bandung Bondowoso.")
+        return
+    
+    choice = binary_question(f"Apakah Anda ingin mengembalikan jin terakhir dengan username {jin_purgatory.arr[jin_purgatory.neff-1].nama} (Y/N)? ")
+    if choice == "Y":
+        jin_purgatory, jin = pop(jin_purgatory)
+        
 # -----------------------=====================================----------------------------------
 
 # Variabel berisi akun yang sedang login dan commandsnya
@@ -441,8 +452,8 @@ candi = Array(([None for i in range(NMAX)], 0))
 bahan_bangunan = Array(([None for i in range(NMAX)], 0))
 
 # Array jin dan candi yang telah dihapus
-jin_purgatory = Array(([None for i in range(NMAX)], 0))
-candi_purgatory = Array(([None for i in range(NMAX)], 0))
+jin_purgatory = Array(([None for i in range(2*NMAX)], 0))
+candi_purgatory = Array(([None for i in range(2*NMAX)], 0))
 
 # Run ketika file di call
 if __name__ == "__main__":
@@ -459,13 +470,50 @@ if __name__ == "__main__":
             elif cmd == "summonjin":
                 summonjin(LOGGED_IN)
             elif cmd == "hapusjin":
-                hapusjin()
+                hapusjin(LOGGED_IN)
+            elif cmd == "ubahjin":
+                ubahjin(LOGGED_IN)
+            elif cmd == "bangun":
+                bangun(LOGGED_IN)
+            elif cmd == "kumpul":
+                kumpul(LOGGED_IN)
+            elif cmd == "batchbangun":
+                batchbangun(LOGGED_IN, users)
+            elif cmd == "batchkumpul":
+                batchkumpul(LOGGED_IN, users)
+            elif cmd == "laporanjin":
+                laporanjin(users, candi, bahan_bangunan, LOGGED_IN)
             elif cmd == "laporancandi":
-                laporancandi(candi)
+                laporancandi(candi, LOGGED_IN)
+            elif cmd == "hancurkancandi":
+                hancurkancandi(LOGGED_IN)
+            elif cmd == "ayamberkokok":
+                ayamberkokok(candi, LOGGED_IN)
+            elif cmd == "save":
+                save()
             elif cmd == "help":
                 help(ALLOWED_COMMANDS)
-            elif cmd == "debug":
-                print_user(users)
+            elif cmd == "exit":
+                exit()
+            elif cmd == "debugpurg":
+                print("Jin purgatory:")
+                for i in range(jin_purgatory.neff):
+                    print(jin_purgatory.arr[i].nama)
+                print()
+                print("Candi purgatory:")
+                for i in range(candi_purgatory.neff):
+                    print(candi_purgatory.arr[i].id, candi_purgatory.arr[i].pembuat)
+            elif cmd == "debuguser":
+                for i in range(users.neff):
+                    print(users.arr[i].nama, users.arr[i].pwd, users.arr[i].role)
+            elif cmd == "debugcandi":
+                for i in range(candi.neff):
+                    print(candi.arr[i].id, candi.arr[i].pembuat, candi.arr[i].pasir, candi.arr[i].batu, candi.arr[i].air)
+            elif cmd == "debugbahan":
+                for i in range(bahan_bangunan.neff):
+                    print(bahan_bangunan.arr[i].nama, bahan_bangunan.arr[i].deskripsi, bahan_bangunan.arr[i].jumlah)
+            elif cmd == "debugsmallid":
+                print(smallest_id(candi))
     else:
         print("Tidak ada nama folder yang diberikan!")
         print()
