@@ -15,6 +15,26 @@ def not_in(arr: Array, item: VALID_TYPE) -> bool:
             return True
     return False
 
+def neg(a: int):
+    # Mengembalikan negatif dari a
+    return a * -1
+
+def tambah_bahan(array_bahan: Array, tambahan: tuple[int,int,int]) -> Array:
+    # Asumsi pasir index 0, batu index 1, air index 2
+    array_bahan.arr[0].jumlah += tambahan[0]
+    array_bahan.arr[1].jumlah += tambahan[1]
+    array_bahan.arr[2].jumlah += tambahan[2]
+    
+    return array_bahan
+
+def kurangi_bahan(array_bahan: Array, tambahan: tuple[int,int,int]) -> Array:
+    # Asumsi pasir index 0, batu index 1, air index 2
+    array_bahan.arr[0].jumlah -= tambahan[0]
+    array_bahan.arr[1].jumlah -= tambahan[1]
+    array_bahan.arr[2].jumlah -= tambahan[2]
+    
+    return array_bahan
+
 def binary_question(text: str) -> str:
     # Mengulang pertanyaan sampai jawaban antara Y atau N kemudian mengembalikan jawaban tersebut
     choice = ""
@@ -22,10 +42,10 @@ def binary_question(text: str) -> str:
         choice = input(text).upper()
     return choice
 
-def search_nama(user_array: Array, nama: str) -> int:
+def search_nama(array: Array, nama: str) -> int:
     # Mencari nama dalam matriks user dan mengembalikan indexnya jika ditemukan
-    for i in range(user_array.neff):
-        if user_array.arr[i].nama == nama:
+    for i in range(array.neff):
+        if array.arr[i].nama == nama:
             return i
     return -1
 
