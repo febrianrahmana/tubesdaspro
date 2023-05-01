@@ -7,8 +7,6 @@ now = datetime.datetime.today()
 seconds = now.timestamp()
 seed = round(seconds)
 
-# TODO: append/konso, head, tail
-
 # Belum dipake
 def not_in(arr: Array, item: VALID_TYPE) -> bool:
     # Mengembalikan True jika menemukan item dalam array
@@ -66,13 +64,19 @@ def find_empty(arr: Array, i = 0) -> int:
     else:
         return i
 
-# TODO reimplement sort (probably use konso, head, tail concept to make it recursive)
-def bigger(a: typing.Union[int, str], b: typing.Union[int, str]) -> typing.Union[int,str]:
-    # Return bigger value for comparator
-    return a if a > b else b
+def jin_sort(a: JinReport, b: JinReport) -> bool:
+    # Mengembalikan True jika jumlah candi jin a lebih besar daripada b atau jumlah keduanya sama dan nama b lebih tinggi
+    # Dengan fungsi bubble_sort, mengembalikan array yang berurut dari jin terajin hingga jin termalas dengan urutan leksikografis sesuai
+    
+    return a.jumlah > b.jumlah or (a.jumlah == b.jumlah and a.nama < b.nama)
 
-def bubble_sort(arr: list, comparator: Callable):
-    pass
+def bubble_sort(arr: Array, comparator: Callable[[JinReport, JinReport], bool]) -> Array:
+    # Mengembalikan array yang sudah di-sort sesuai fungsi comparator
+    for i in range(arr.neff):
+        for j in range(arr.neff):
+            if comparator(arr.arr[i],arr.arr[j]):
+                arr.arr[i],arr.arr[j] = arr.arr[j], arr.arr[i]
+    return arr
 
 def rmv(arr: Array, index: int, i: int = 0) -> Array:
     # Mengosongkan suatu index pada list
@@ -92,6 +96,9 @@ def pop(arr: Array, i: int) -> Array:
         arr.neff -= 1
         return arr
     
+def max(a: int, b: int) -> int:
+    return a if a > b else b
+
 def randomize(a: int, b : int) -> int:
     # Mengembalikan jumlah random dari range a sampai b menggunakan lcg
     global seed

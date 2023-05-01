@@ -26,8 +26,13 @@ class Command:
     def __init__(self, arr: tuple[str, str]) -> None:
         self.nama: str = arr[0]
         self.deskripsi: str = arr[1]
+        
+class JinReport:
+    def __init__(self, arr: tuple[str, int]):
+        self.nama: str = arr[0]
+        self.jumlah: int = arr[1]
 
-VALID_TYPE = typing.Union[Candi, User, Bahan, Command, int, str, list, None]
+VALID_TYPE = typing.Union[Candi, User, Bahan, Command, int, str, JinReport, None]
 FILENAME = typing.Literal["bahan_bangunan.csv", "candi.csv", "user.csv"]
 NMAX = 102
 
