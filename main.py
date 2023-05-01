@@ -37,9 +37,10 @@ def login(users: Array) -> None:
 # F02 - Logout
 # Input: current user logged in
 def logout() -> None:
-    global LOGGED_IN
+    global LOGGED_IN, ALLOWED_COMMANDS
     if LOGGED_IN.nama != None:
         LOGGED_IN = User((None, None, None))
+        ALLOWED_COMMANDS = DEFAULT_COMMANDS 
     else:
         print("Logout gagal!")
         print("Anda belum login, silakan login terlebih dahulu sebelum melakukan logout")
@@ -514,25 +515,6 @@ if __name__ == "__main__":
                 exit()
             elif cmd == "undo":
                 undo(LOGGED_IN)
-            elif cmd == "debugpurg":
-                print("Jin purgatory:")
-                for i in range(jin_purgatory.neff):
-                    print(jin_purgatory.arr[i].nama)
-                print()
-                print("Candi purgatory:")
-                for i in range(candi_purgatory.neff):
-                    print(candi_purgatory.arr[i].id, candi_purgatory.arr[i].pembuat)
-            elif cmd == "debuguser":
-                for i in range(users.neff):
-                    print(users.arr[i].nama, users.arr[i].pwd, users.arr[i].role)
-            elif cmd == "debugcandi":
-                for i in range(candi.neff):
-                    print(candi.arr[i].id, candi.arr[i].pembuat, candi.arr[i].pasir, candi.arr[i].batu, candi.arr[i].air)
-            elif cmd == "debugbahan":
-                for i in range(bahan_bangunan.neff):
-                    print(bahan_bangunan.arr[i].nama, bahan_bangunan.arr[i].deskripsi, bahan_bangunan.arr[i].jumlah)
-            elif cmd == "debugsmallid":
-                print(smallest_id(candi))
             else:
                 print("Command tidak ditemukan!")
     else:
